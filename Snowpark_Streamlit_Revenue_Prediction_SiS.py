@@ -7,6 +7,9 @@ import streamlit as st
 import pandas as pd
 import snowflake.snowpark as snowpark 
 from snowflake.snowpark.functions import col
+from snowflake.snowpark.session import Session
+import json
+
 
 # Function to load last six months' budget allocations and ROI 
 def load():
@@ -32,8 +35,25 @@ def chart(chart_data):
 st.header("SkiGear Co Ad Spend Optimizer")
 st.subheader("Advertising budgets")
 
+# Read Snowflake credentials from connection.json
+with open('connection.json', 'r') as json_file:
+    connection_config = json.load(json_file)
+
+# Initialize Snowflake session with parameters
+parameters = {
+    "account": connection_config["account"],
+    "user": connection_config["user"],
+    "password": connection_config["password"],
+    "warehouse": connection_config["warehouse"],
+    "database": connection_config["database"],
+    "schema": connection_config["schema"],
+}
+
+session = Session.builder.configs(parameters).create()
+
+
 # Call functions to get Snowflake session and load data
-session = snowpark.session._get_active_session()
+# session = snowpark.session._get_active_session()
 channels = ["Search engine", "Email", "Social media", "Video"]
 channels_upper = [channel.replace(" ", "").upper() for channel in channels]
 data, alloc, rois, last_alloc = load()
