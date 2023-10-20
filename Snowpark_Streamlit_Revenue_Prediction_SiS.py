@@ -5,7 +5,7 @@ import calendar
 import altair as alt
 import streamlit as st
 import pandas as pd
-import snowflake.snowpark as snowpark 
+# import snowflake.snowpark as snowpark 
 from snowflake.snowpark.functions import col
 from snowflake.snowpark.session import Session
 import json
